@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import os
 import shutil
 import tempfile
 import uuid
+from typing import Optional
 
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -33,23 +36,23 @@ analysis_store: dict[str, dict] = {}
 
 class YouTubeRequest(BaseModel):
     url: str
-    title: str | None = None
+    title: Optional[str] = None
 
 
 class UpdateAbcRequest(BaseModel):
     session_id: str
     abc: str
-    title: str | None = None
-    lyrics: str | None = None
+    title: Optional[str] = None
+    lyrics: Optional[str] = None
 
 
 class ManualUpdateRequest(BaseModel):
     session_id: str
-    title: str | None = None
-    key: str | None = None
-    bpm: int | None = None
-    time_signature: str | None = None
-    lyrics: str | None = None
+    title: Optional[str] = None
+    key: Optional[str] = None
+    bpm: Optional[int] = None
+    time_signature: Optional[str] = None
+    lyrics: Optional[str] = None
 
 
 @app.get("/")

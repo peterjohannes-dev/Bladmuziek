@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import numpy as np
 from basic_pitch.inference import predict
-from basic_pitch import ICASSP_2022_MODEL_PATH
 
 
 # MIDI note number to note name mapping

@@ -3,8 +3,25 @@ import FileUploader from './components/FileUploader'
 import SheetMusicViewer from './components/SheetMusicViewer'
 import AbcEditor from './components/AbcEditor'
 import ManualInputPanel from './components/ManualInputPanel'
+import LyricsPrompt from './components/LyricsPrompt'
 
 const API_BASE = '/api'
+
+function addLyricsToAbc(abc, lyrics) {
+  if (!lyrics || !lyrics.trim()) {
+    // Remove existing w: lines
+    return abc.replace(/\nw:.*$/gm, '')
+  }
+  // Remove existing w: lines first
+  let clean = abc.replace(/\nw:.*$/gm, '')
+  // Remove trailing newlines/whitespace, then add lyrics
+  clean = clean.trimEnd()
+  const lyricsLines = lyrics.trim().split('\n')
+  for (const line of lyricsLines) {
+    clean += `\nw: ${line}`
+  }
+  return clean + '\n'
+}
 
 export default function App() {
   const [sessionId, setSessionId] = useState(null)
@@ -15,6 +32,7 @@ export default function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [showEditor, setShowEditor] = useState(false)
+  const [showLyricsPrompt, setShowLyricsPrompt] = useState(false)
 
   const handleAnalysisResult = (result) => {
     setSessionId(result.session_id)
@@ -27,6 +45,7 @@ export default function App() {
     })
     setChords(result.chords || [])
     setError('')
+    setShowLyricsPrompt(true)
   }
 
   const handleAbcChange = (newAbc) => {
@@ -50,6 +69,28 @@ export default function App() {
     }
   }
 
+  const handleLyricsSubmit = (newLyrics) => {
+    setLyrics(newLyrics)
+    setAbc(prev => addLyricsToAbc(prev, newLyrics))
+    setShowLyricsPrompt(false)
+    // Save to backend
+    if (sessionId) {
+      fetch(`${API_BASE}/update/abc`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: sessionId,
+          abc: addLyricsToAbc(abc, newLyrics),
+          lyrics: newLyrics,
+        }),
+      }).catch(() => {})
+    }
+  }
+
+  const handleLyricsSkip = () => {
+    setShowLyricsPrompt(false)
+  }
+
   const handleManualUpdate = async (updates) => {
     if (!sessionId) return
     try {
@@ -63,7 +104,11 @@ export default function App() {
       })
       const result = await response.json()
       if (result.abc) {
-        setAbc(result.abc)
+        // Re-apply lyrics to regenerated ABC
+        setAbc(addLyricsToAbc(result.abc, updates.lyrics !== undefined ? updates.lyrics : lyrics))
+      }
+      if (updates.lyrics !== undefined) {
+        setLyrics(updates.lyrics)
       }
       if (result.key) setSongInfo(prev => ({ ...prev, key: result.key }))
       if (result.bpm) setSongInfo(prev => ({ ...prev, bpm: result.bpm }))
@@ -112,6 +157,14 @@ export default function App() {
 
       {sessionId && abc && (
         <>
+          {showLyricsPrompt && (
+            <LyricsPrompt
+              title={songInfo.title}
+              onSubmit={handleLyricsSubmit}
+              onSkip={handleLyricsSkip}
+            />
+          )}
+
           <SheetMusicViewer
             abc={abc}
             songInfo={songInfo}

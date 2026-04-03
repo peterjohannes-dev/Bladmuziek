@@ -23,7 +23,6 @@ export default function ManualInputPanel({ songInfo, lyrics, onLyricsChange, onU
     if (localTimeSig !== songInfo.timeSignature) updates.time_signature = localTimeSig
     if (localLyrics !== lyrics) {
       updates.lyrics = localLyrics
-      onLyricsChange(localLyrics)
     }
 
     if (Object.keys(updates).length > 0) {

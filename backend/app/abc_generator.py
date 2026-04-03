@@ -1,4 +1,5 @@
 """Generate ABC notation from melody and chord analysis."""
+from __future__ import annotations
 
 
 def generate_abc(
