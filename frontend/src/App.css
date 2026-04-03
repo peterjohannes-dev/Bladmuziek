@@ -272,6 +272,119 @@ body {
   flex-wrap: wrap;
 }
 
+/* MIDI Player */
+.player-section {
+  margin-top: 16px;
+  padding: 16px 20px;
+  background: #2c1810;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.player-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-btn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  line-height: 1;
+}
+
+.player-btn-play {
+  background: #c8553d;
+  color: white;
+  width: 52px;
+  height: 52px;
+  font-size: 1.4rem;
+}
+
+.player-btn-play:hover {
+  background: #e06a52;
+  transform: scale(1.05);
+}
+
+.player-btn-pause {
+  background: #e8a33c;
+  color: white;
+  width: 52px;
+  height: 52px;
+  font-size: 1.4rem;
+}
+
+.player-btn-pause:hover {
+  background: #f0b84e;
+  transform: scale(1.05);
+}
+
+.player-btn-stop {
+  background: #5a4a3a;
+  color: #d4c5a9;
+}
+
+.player-btn-stop:hover:not(:disabled) {
+  background: #7a6a5a;
+}
+
+.player-btn-stop:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.player-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.player-time {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #d4c5a9;
+  min-width: 40px;
+  text-align: center;
+}
+
+.player-bar {
+  flex: 1;
+  height: 6px;
+  background: #5a4a3a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.player-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c8553d, #e8a33c);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.player-hint {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #8b7355;
+}
+
+.player-error {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #e8a99a;
+}
+
 /* Editor */
 .editor-section {
   background: white;
